@@ -1,5 +1,10 @@
 import streamlit as st
 import openai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+print(os.getenv("OPENAI_API_KEY"))
 
 st.title("Évaluation de la compétitivité de votre entreprise")
 
@@ -490,14 +495,16 @@ if st.session_state.step == len(questions):
         st.write("Le manque de gestion des créances peut entraîner une grave crise de trésorerie, des tensions avec les clients et des difficultés à honorer vos obligations financières.")
         st.write("Mettez en place une gestion régulière et rigoureuse des créances clients, en intégrant un suivi dans votre ERP.")
 
-    api_key = "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"
-
+    
     st.write("---")  
     st.write("Version avec formulaire et et retour réalisé par ChatGPT :") 
 
-
+    # api_key = os.getenv("OPENAI_API_KEY")
     # Configuration de l'API OpenAI (assurez-vous d'utiliser une variable d'environnement pour la clé API)
-    client = openai.OpenAI(api_key="")
+    # client = openai.OpenAI(api_key=api_key)
+
+    api_key = st.secrets["OPENAI_API_KEY"]
+    client = openai.OpenAI(api_key=api_key)
 
     # Titre de l'application
     st.title("Génération de Synthèse Odoo")
