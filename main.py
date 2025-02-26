@@ -497,7 +497,7 @@ if st.session_state.step == len(questions):
 
 
     # Configuration de l'API OpenAI (assurez-vous d'utiliser une variable d'environnement pour la clé API)
-    client = openai.OpenAI(api_key="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")
+    client = openai.OpenAI(api_key="")
 
     # Titre de l'application
     st.title("Génération de Synthèse Odoo")
