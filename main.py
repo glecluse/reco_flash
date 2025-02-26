@@ -515,11 +515,13 @@ if st.session_state.step == len(questions):
         nom = st.text_input("Nom", placeholder="Votre nom")
         telephone = st.text_input("Numéro de téléphone", placeholder="Votre numéro de téléphone")
         email = st.text_input("Adresse mail", placeholder="Votre adresse email")
+        content = st.text_input("content prompt",placeholder="content prompt")
+        prompt1 = st.text_input("Prompt chat gpt",placeholder="Prompt chat gpt")
         submit_button = st.form_submit_button("Obtenir la synthèse")
 
     # Vérification des champs et génération de la synthèse
     if submit_button:
-        if not prenom or not nom or not telephone or not email:
+        if not prenom or not nom or not telephone or not email or not content or not prompt1:
             st.error("Veuillez remplir tous les champs du formulaire.")
         else:
             # Concaténation des réponses (exemple, les réponses doivent être définies dans votre contexte)
@@ -527,9 +529,8 @@ if st.session_state.step == len(questions):
 
             # Création du prompt avec le prénom du demandeur
             prompt = f"""
-            Synthétisez les informations relatives à l'entreprise de l'utilisateur en un résumé clair et structuré en prenant en compte que vous êtes un intégrateur Odoo 
-            et que vous souhaitez proposer vos services. Parlez directement à la personne en utilisant son prénom : {prenom}.
-            
+            {prompt1} Parlez directement à la personne en utilisant son prénom : {prenom}.
+            Voici quelques éléments de contexte :
             {reponses}
             """
             
@@ -538,7 +539,7 @@ if st.session_state.step == len(questions):
                 response = client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": "Tu es un assistant utile qui synthétise des informations."},
+                        {"role": "system", "content": content},
                         {"role": "user", "content": prompt}
                     ],
                     temperature=0.7
