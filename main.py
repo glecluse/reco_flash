@@ -497,7 +497,7 @@ if st.session_state.step == len(questions):
 
     
     st.write("---")  
-    st.write("Version avec formulaire et et retour réalisé par ChatGPT :") 
+    st.write("Version avec formulaire et retour réalisé par ChatGPT :") 
 
     # api_key = os.getenv("OPENAI_API_KEY")
     # Configuration de l'API OpenAI (assurez-vous d'utiliser une variable d'environnement pour la clé API)
