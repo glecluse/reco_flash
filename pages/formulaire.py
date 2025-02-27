@@ -2,11 +2,23 @@ import streamlit as st
 import openai
 import os
 from dotenv import load_dotenv
+from PIL import Image
 
 load_dotenv()
 print(os.getenv("OPENAI_API_KEY"))
 
+# Configuration sans barre latérale
+st.set_page_config(initial_sidebar_state="collapsed")
 
+# Masquer totalement la barre latérale avec du CSS
+hide_sidebar_style = """
+    <style>
+        section[data-testid="stSidebar"] {
+            display: none !important;
+        }
+    </style>
+"""
+st.markdown(hide_sidebar_style, unsafe_allow_html=True)
 
 # Initialisation des réponses et de la progression
 if "responses" not in st.session_state:
@@ -166,7 +178,6 @@ if st.session_state.step < len(questions):
         st.session_state.step += 1
         st.rerun()  # Correction ici
     
-    st.image("lpde.jpg")
 
 # Affichage du rapport final
 #elif st.session_state.step == len(questions):
@@ -178,7 +189,8 @@ if st.session_state.step < len(questions):
 
 if st.session_state.step == len(questions):
 
-    st.title("Compte-rendu de vos réponses")
+    st.title("Recommandations suite à vos réponses")
+    
 
     reponse1 = st.session_state.responses.get(questions[0][0], 'Non répondu')
     reponse2 = st.session_state.responses.get(questions[1][0], 'Non répondu')
@@ -204,6 +216,14 @@ if st.session_state.step == len(questions):
     reponse22 = st.session_state.responses.get(questions[21][0], 'Non répondu')
     reponse23 = st.session_state.responses.get(questions[22][0], 'Non répondu')
 
+    
+
+    st.markdown(
+        "<h1 style='text-align: center; font-size: 36px; font-weight: bold;'>Gestion Stratégique</h1>",
+        unsafe_allow_html=True
+    )
+
+    
     if reponse1 == "J'ai une idée précise de la mission de mon entreprise et de sa vision.":
         st.write("Vous avez une direction claire pour votre entreprise. Cela favorise une motivation accrue et une prise de décisions alignée sur votre objectif à long terme.")
         st.write("Continuez à communiquer cette vision à vos équipes et intégrez-la dans votre stratégie à long terme. Adaptez-la régulièrement en fonction de l’évolution du marché et des opportunités.")
@@ -255,6 +275,12 @@ if st.session_state.step == len(questions):
     elif reponse4 == "Je n’ai pas de grille tarifaire clairement définie.":
         st.write("L’absence d’une grille tarifaire claire peut entraîner des inégalités et des conflits avec vos clients.")
         st.write("Élaborez une grille tarifaire structurée et transparente, en définissant des prix cohérents avec la valeur perçue de vos services/produits. Utilisez des outils comme les comparateurs de prix et analysez la concurrence pour vous positionner efficacement tout en garantissant une rentabilité suffisante.")
+    
+    
+    st.markdown(
+        "<h1 style='text-align: center; font-size: 36px; font-weight: bold;'>Gestion Clients</h1>",
+        unsafe_allow_html=True
+    )
     
     if reponse5 == "J’ai une vision claire de la rentabilité de chaque produit/service. Je suis en mesure d’ajuster les prix ou les coûts en fonction des marges.":
         st.write("Vous optimisez vos prix et coûts pour maximiser la rentabilité.")
@@ -344,6 +370,12 @@ if st.session_state.step == len(questions):
         st.write("Une stratégie commerciale mal définie entraînera une perte de direction dans vos efforts de vente.")
         st.write("Implémentez des KPIs dès maintenant pour obtenir des insights précieux sur votre activité et améliorer la gestion de votre stratégie commerciale. Sans cela, vous risquez de naviguer sans boussole.")
     
+    
+    st.markdown(
+        "<h1 style='text-align: center; font-size: 36px; font-weight: bold;'>Gestion Interne</h1>",
+        unsafe_allow_html=True
+    )
+
     if reponse12 == "L'organisation interne de l'entreprise est claire et bien structurée, facilitant la communication entre collègues et dirigeants et la prise de décision.":
         st.write("Une organisation bien structurée favorise une communication fluide et une prise de décision rapide et efficace.")
         st.write("Continuez à maintenir une organisation claire et structurée. Pour renforcer cette organisation, veillez à réévaluer régulièrement les rôles et la répartition des tâches pour rester aligné sur les objectifs à long terme.")
@@ -419,6 +451,12 @@ if st.session_state.step == len(questions):
         st.write("L’absence de clarté entraîne des conflits, des erreurs fréquentes et une mauvaise exécution des tâches, impactant négativement l’équipe et l’entreprise.")
         st.write("Clarifiez immédiatement les rôles et responsabilités, en utilisant des outils de gestion comme la matrice RACI et en assurant une communication continue.")
     
+    
+    st.markdown(
+        "<h1 style='text-align: center; font-size: 36px; font-weight: bold;'>Gestion Financière</h1>",
+        unsafe_allow_html=True
+    )
+
     if reponse18 == "La rentabilité est suivie de manière régulière grâce à un tableau de bord financier clair.":
         st.write("Une bonne visibilité sur les marges et les performances financières, permettant une gestion financière optimisée.")
         st.write("Maintenez ce suivi régulier et optimal pour assurer une rentabilité constante et pour anticiper les évolutions financières.")
@@ -499,7 +537,9 @@ if st.session_state.step == len(questions):
 
     
     st.write("---")  
-    st.write("Version avec formulaire et retour réalisé par ChatGPT :") 
+    st.write("Merci d'avoir pris le temps de consulter nos recommandations !") 
+    st.write("Si vous souhaitez aller plus loin ou avoir des informations plus détaillées, nous vous invitons à répondre aux questions ci-dessous.") 
+    st.write("Nous serons ravis de vous accompagner dans l'optimisation de votre gestion interne et financière.") 
 
     # api_key = os.getenv("OPENAI_API_KEY")
     # Configuration de l'API OpenAI (assurez-vous d'utiliser une variable d'environnement pour la clé API)
@@ -508,22 +548,70 @@ if st.session_state.step == len(questions):
     api_key = st.secrets["OPENAI_API_KEY"]
     client = openai.OpenAI(api_key=api_key)
 
-    # Titre de l'application
-    st.title("Génération de Synthèse Odoo")
-
     # Formulaire de saisie des informations utilisateur
+    
+
     with st.form("contact_form"):
+        st.header("Formulaire de contact")
+
+        # Informations personnelles
         prenom = st.text_input("Prénom", placeholder="Votre prénom")
         nom = st.text_input("Nom", placeholder="Votre nom")
         telephone = st.text_input("Numéro de téléphone", placeholder="Votre numéro de téléphone")
         email = st.text_input("Adresse mail", placeholder="Votre adresse email")
-        content = st.text_input("content prompt",placeholder="content prompt")
-        prompt1 = st.text_input("Prompt chat gpt",placeholder="Prompt chat gpt")
-        submit_button = st.form_submit_button("Obtenir la synthèse")
+        societe = st.text_input("Votre société", placeholder="Nom de votre entreprise")
+        activite = st.text_input("Quel est l’activité de votre société ?", placeholder="Décrivez brièvement votre activité")
+
+
+        # Questions supplémentaires avec choix
+        recommandation_detaillee = st.radio(
+            "Souhaitez-vous une recommandation plus détaillée sur un point spécifique ?",
+            ["Oui, je souhaite des précisions supplémentaires sur un domaine en particulier.",
+            "Non, les recommandations actuelles sont suffisantes pour le moment."]
+        )
+
+        demo_progiciel = st.radio(
+            "Seriez-vous intéressé(e) par une démonstration d’un progiciel qui vous aiderait à mettre en œuvre certaines des recommandations proposées ?",
+            ["Oui, je souhaiterais voir une démo de progiciel pour gérer la rentabilité, la trésorerie, les stocks, etc.",
+            "Non, je préfère me concentrer sur les recommandations manuelles pour l'instant."]
+        )
+
+        conseil_strategique = st.radio(
+            "Souhaitez-vous un conseil personnalisé en stratégie pour développer votre entreprise en fonction des points évoqués dans nos recommandations ?",
+            ["Oui, je serais intéressé(e) par un accompagnement stratégique pour optimiser mes processus.",
+            "Non, je préfère garder mon approche actuelle pour le moment."]
+        )
+
+        tableau_bord = st.radio(
+            "Aimeriez-vous des conseils spécifiques sur la mise en place d’un tableau de bord financier pour suivre vos indicateurs clés de rentabilité et de performance ?",
+            ["Oui, je souhaite des conseils pour créer un tableau de bord personnalisé.",
+            "Non, je suis déjà en train de travailler sur un tableau de bord interne."]
+        )
+
+        optimisation_processus = st.radio(
+            "Seriez-vous intéressé(e) par une consultation sur l’optimisation de vos processus internes via des outils de gestion de projet ou ERP ?",
+            ["Oui, je voudrais une présentation de solutions ERP adaptées à mes besoins.",
+            "Non, je suis déjà équipé(e) de mon propre système."]
+        )
+
+        gestion_risques = st.radio(
+            "Souhaitez-vous être accompagné(e) dans la mise en place d’un système de gestion des risques financiers pour sécuriser l’avenir de votre entreprise ?",
+            ["Oui, j’aimerais être accompagné(e) pour créer une stratégie de gestion des risques financiers.",
+            "Non, cela ne correspond pas à mes priorités actuelles."]
+        )
+
+        commentaires = st.text_area(
+            "Avez-vous des questions ou des besoins spécifiques concernant l’optimisation de vos finances ou la gestion interne de votre entreprise ?",
+            placeholder="Ajoutez vos commentaires ici..."
+        )
+
+        submit_button = st.form_submit_button("Envoyer")
+
+
 
     # Vérification des champs et génération de la synthèse
     if submit_button:
-        if not prenom or not nom or not telephone or not email or not content or not prompt1:
+        if not prenom or not nom or not telephone or not email :
             st.error("Veuillez remplir tous les champs du formulaire.")
         else:
             # Concaténation des réponses (exemple, les réponses doivent être définies dans votre contexte)
@@ -531,7 +619,7 @@ if st.session_state.step == len(questions):
 
             # Création du prompt avec le prénom du demandeur
             prompt = f"""
-            {prompt1} Parlez directement à la personne en utilisant son prénom : {prenom}.
+            Parlez directement à la personne en utilisant son prénom : {prenom}.
             Voici quelques éléments de contexte :
             {reponses}
             """
@@ -541,7 +629,7 @@ if st.session_state.step == len(questions):
                 response = client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": content},
+                        {"role": "system", "content": "réalise une synthèse des réponses de l'utilisateur"},
                         {"role": "user", "content": prompt}
                     ],
                     temperature=0.7
@@ -550,7 +638,31 @@ if st.session_state.step == len(questions):
             
             # Appel de l'API
             synthese = get_chatgpt_response(prompt)
+            st.write(f"{prenom}, votre message a bien été envoyé, nous allons vous contacter rapidement.")
             
-            # Affichage du résultat
-            st.subheader("Synthèse générée :")
-            st.write(synthese)
+
+# CSS pour fixer le footer
+footer_style = """
+    <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+"""
+
+# Appliquer le CSS
+st.markdown(footer_style, unsafe_allow_html=True)
+
+# Affichage du footer avec une image locale via st.image()
+footer_container = st.empty()
+with footer_container.container():
+    st.markdown('<div class="footer">', unsafe_allow_html=True)
+    st.image("lpde.png", width=600)  # ✅ Chemin corrigé et compatible
+    st.markdown('</div>', unsafe_allow_html=True)
