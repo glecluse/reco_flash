@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 print(os.getenv("OPENAI_API_KEY"))
 
-st.title("Évaluation de la compétitivité de votre entreprise")
+
 
 # Initialisation des réponses et de la progression
 if "responses" not in st.session_state:
@@ -165,6 +165,8 @@ if st.session_state.step < len(questions):
         st.session_state.responses[category] = response
         st.session_state.step += 1
         st.rerun()  # Correction ici
+    
+    st.image("lpde.jpg")
 
 # Affichage du rapport final
 #elif st.session_state.step == len(questions):
