@@ -1,5 +1,5 @@
 import streamlit as st
-from PIL import Image
+
 
 # Configuration sans barre latérale
 st.set_page_config(initial_sidebar_state="collapsed")
