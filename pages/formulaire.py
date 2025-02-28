@@ -139,6 +139,12 @@ if st.session_state.step < len(questions):
     st.markdown(f"### {question}")
     response = st.radio("", options, key=f"q{st.session_state.step}")
 
+    # Calcul de la progression
+    progress_value = (st.session_state.step + 1) / len(questions) if questions else 0
+
+    # Affichage de la barre de progression
+    st.progress(progress_value)
+
     if st.button("Suivant"):
         st.session_state.responses[category] = response
         st.session_state.step += 1
@@ -528,7 +534,7 @@ if st.session_state.step == len(questions):
             DESTINATAIRE = os.environ.get("DESTINATAIRE")
 
             msg = MIMEMultipart()
-            msg['From'] = EMAIL_ADDRESS
+            msg['From'] = "noreply_lpde@lpde.pro"
             msg['To'] = DESTINATAIRE
             msg['Subject'] = 'Nouvelle soumission de formulaire'
             body = f"""
@@ -570,13 +576,30 @@ if st.session_state.step == len(questions):
 
             """
             msg.attach(MIMEText(body, 'plain'))
+            
+            msg2 = MIMEMultipart()
+            msg2['From'] = "noreply_lpde@lpde.pro"
+            msg2['To'] = email
+            msg2['Subject'] = 'Confirmation d\'envoie'
+            body2 = f"""Bonjour {prenom.capitalize()}, nous avons bien reçu votre message, notre équipe prendra rapidement attache avec vous. 
+            
+    L'équipe LPDE
+    Cabinet d'expertise comptable
+    09 78 36 47 36
+            """
+            msg2.attach(MIMEText(body2, 'plain'))
 
             # Envoyer l'e-mail
             with smtplib.SMTP('mail.infomaniak.com', 587) as smtp:
                 smtp.starttls()
                 smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
                 smtp.sendmail(EMAIL_ADDRESS, DESTINATAIRE, msg.as_string())
+            with smtplib.SMTP('mail.infomaniak.com', 587) as smtp:
+                smtp.starttls()
+                smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+                smtp.sendmail(EMAIL_ADDRESS, email, msg2.as_string())
 
-            st.write(f"{prenom}, votre message a bien été envoyé, nous allons vous contacter rapidement.")
+            st.write(f"{prenom.capitalize()}, votre message a bien été envoyé, nous allons vous contacter rapidement.")
+
 
             
