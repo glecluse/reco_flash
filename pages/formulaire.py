@@ -2,7 +2,9 @@ import streamlit as st
 import openai
 import os
 from dotenv import load_dotenv
-from PIL import Image
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 load_dotenv()
 
@@ -497,7 +499,7 @@ if st.session_state.step == len(questions):
             st.error("Veuillez remplir tous les champs du formulaire.")
         else:
             # Concaténation des réponses (exemple, les réponses doivent être définies dans votre contexte)
-            reponses = "\n".join([eval(f"reponse{i}") for i in range(1, 24)])
+            reponses = "\n".join([eval(f"reponse{i}") for i in range(1, 18)])
 
             # Création du prompt avec le prénom du demandeur
             prompt = f"""
@@ -511,7 +513,7 @@ if st.session_state.step == len(questions):
                 response = client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": "réalise une synthèse des réponses de l'utilisateur"},
+                        {"role": "system", "content": "Réalise un mail prêt à être envoyé à l'utilisateur en prenant en compte ses réponses et ses problématiques en sachant que je travaille chez un expert comptable (LPDE) et que je souhaite lui recommander les services d'un partenaire de confiance pour intégrer l'ERP odoo dans son entreprise. "},
                         {"role": "user", "content": prompt}
                     ],
                     temperature=0.7
@@ -523,7 +525,57 @@ if st.session_state.step == len(questions):
 
             EMAIL_ADDRESS = os.environ.get('EMAIL_ADDRESS')
             EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
-            RECEIVER_EMAIL = 'geoffrey.lecluse45@gmail.com'
+            DESTINATAIRE = os.environ.get("DESTINATAIRE")
+
+            msg = MIMEMultipart()
+            msg['From'] = EMAIL_ADDRESS
+            msg['To'] = DESTINATAIRE
+            msg['Subject'] = 'Nouvelle soumission de formulaire'
+            body = f"""
+            Nouvelle soumission de formulaire reçue :
+
+            Prénom : {prenom}
+            Nom : {nom}
+            Email : {email}
+            Téléphone : {telephone}
+            Société : {societe}
+            Activité : {activite}
+            Recommandation détaillée : {recommandation_detaillee}
+            Demo progiciel : {demo_progiciel}
+            Conseil stratégique : {conseil_strategique}
+            Tableau de bord : {tableau_bord}
+            Optimisation processus : {optimisation_processus}
+            Gestion des risques : {gestion_risques}
+            Commentaires : {commentaires}
             
+            {reponse1}
+            {reponse2}
+            {reponse3}
+            {reponse4}
+            {reponse5}
+            {reponse6}
+            {reponse7}
+            {reponse8}
+            {reponse9}
+            {reponse10}
+            {reponse11}
+            {reponse12}
+            {reponse13}
+            {reponse14}
+            {reponse15}
+            {reponse16}
+            {reponse17}
+
+            Synthèse ChatGPT : {synthese}
+
+            """
+            msg.attach(MIMEText(body, 'plain'))
+
+            # Envoyer l'e-mail
+            with smtplib.SMTP('mail.infomaniak.com', 587) as smtp:
+                smtp.starttls()
+                smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+                smtp.sendmail(EMAIL_ADDRESS, DESTINATAIRE, msg.as_string())
+
             st.write(f"{prenom}, votre message a bien été envoyé, nous allons vous contacter rapidement.")
             
