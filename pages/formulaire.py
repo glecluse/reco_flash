@@ -578,4 +578,6 @@ if st.session_state.step == len(questions):
                 smtp.sendmail(EMAIL_ADDRESS, DESTINATAIRE, msg.as_string())
 
             st.write(f"{prenom}, votre message a bien été envoyé, nous allons vous contacter rapidement.")
+
+# modifi
             
