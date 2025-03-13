@@ -534,7 +534,7 @@ if st.session_state.step == len(questions):
             DESTINATAIRE = os.environ.get("DESTINATAIRE")
 
             msg = MIMEMultipart()
-            msg['From'] = "noreply_lpde@lpde.pro"
+            msg['From'] = "geoffrey@lpde.pro"
             msg['To'] = DESTINATAIRE
             msg['Subject'] = 'Nouvelle soumission de formulaire'
             body = f"""
@@ -578,7 +578,7 @@ if st.session_state.step == len(questions):
             msg.attach(MIMEText(body, 'plain'))
             
             msg2 = MIMEMultipart()
-            msg2['From'] = "noreply_lpde@lpde.pro"
+            msg2['From'] = "geoffrey@lpde.pro"
             msg2['To'] = email
             msg2['Subject'] = 'Confirmation d\'envoie'
             body2 = f"""Bonjour {prenom.capitalize()}, nous avons bien reçu votre message, notre équipe prendra rapidement attache avec vous. 
